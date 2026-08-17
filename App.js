@@ -1,4 +1,4 @@
-// Student Number: uXXXXXXX
+// Student Number: u15057420
 
 const { useState } = React;
 
@@ -45,10 +45,52 @@ const posts = [
 // Write your components below
 // ==========================
 
+function PostCard(props){
+
+    return(
+        <div className="post-card">
+            <h2>{props.studentCard.username}</h2>
+            <p>{props.studentCard.caption}</p>
+            <p>{props.studentCard.status}</p>
+            <button >Delete Post</button>
+            <button >Change Post Status</button>
+        </div>
+    );
+}
+
+function PostList({students}){
+    const [list, setList] = useState(students);
+    
+    // console.log(list);
+    if(!list){
+        return(<p className="empty-message">No Posts Found</p>)
+    }
+    const [username, caption, status] = list; 
+    return(
+        <div>
+            {
+                list.map((card, index) => 
+                    <PostCard key={index} studentCard={card}/>)
+            }
+        </div>
+    );
+}
+
+function SearchBar(){
+    return(
+       <>
+        <label>Search Here: </label>
+        <input type="text" />
+       </>
+    );
+}
+
 function App() {
     return (
         <div className="app">
             <h1>PhotoShare Manager</h1>
+            <SearchBar />
+            <PostList students={posts}/>
         </div>
     );
 }
