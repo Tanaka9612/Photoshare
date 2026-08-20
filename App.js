@@ -74,7 +74,7 @@ function PostList({students}){
 }
 function SortControl({sortBy, setSortBy}){
     return(
-        <div>
+        <div className="sort-group">
             <label> Sort By: </label>
             <select
                 value={sortBy}
@@ -91,23 +91,92 @@ function SortControl({sortBy, setSortBy}){
         </div>
     )
 }
-function AddPostForm(){
+// function AddPostForm({SetAddPost}){
+//         const[username, setUsername] = useState("");
+//         const[caption, setCaption] = useState("");
+//         const[status, setStatus] = useState("Draft");
+//         const[id, SetID] = useState(addPost.length + 1);  //current size + 1
+//     function handleSubmit(e) {
+//         e.preventDefault();
+        
+//         setCaption(e.target.caption);
+//         setUsername("@"+e.target.username);
+//         // SetAddPost(addPost.push({id,username, caption, status}));
+//         const user = {id,username, caption, status};
+//         const addNewUser=(user)=>{
+//             SetAddPost([...addPost, user]);
+//         }
+//     }
+//     return (
+//         <div className="form-group">
+//             <form className="add-post-form" onSubmit={handleSubmit}>
+//                 <label>Username</label>
+//                 <input type="text" id="username"/>
+//                 <label>Caption</label>
+//                 <input type="text" id="caption"/>
+//                 <button>Add Post</button>
+//             </form>
+//         </div>
+//     )
+// }
+
+function AddPostForm({addPost, SetAddPost }) {
+
+    const [username, setUsername] = useState("");
+    const [caption, setCaption] = useState("");
+    const [status, setStatus] = useState("Draft");
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        const newPost = {
+            id: addPost.length+1,
+            username: "@" + username,
+            caption: caption,
+            status: status
+        };
+
+        SetAddPost(prevPosts => [...prevPosts,newPost]);
+
+        setUsername("");
+        setCaption("");
+        setStatus("Draft");
+    }
+
     return (
-        <div className="form">
-            <form >
+        <div className="form-group">
+            <form
+                className="add-post-form"
+                onSubmit={handleSubmit}
+            >
                 <label>Username</label>
-                <input type="text" id="username"/>
+                <input
+                    type="text"
+                    value={username}
+                    onChange={(e) =>
+                        setUsername(e.target.value)
+                    }
+                />
                 <label>Caption</label>
-                <input type="text" id="caption"/>
-                <button>Add Post</button>
+                <input
+                    type="text"
+                    value={caption}
+                    onChange={(e) =>
+                        setCaption(e.target.value)
+                    }
+                />
+                <button type="submit">
+                    Add Post
+                </button>
             </form>
+
         </div>
-    )
+    );
 }
-function SearchBar(){
+function SearchBar({addPost}){
     const [search, setSearch] = useState('');
     const [sortBy, setSortBy] = useState();
-    const filteredPosts = posts.filter(user =>
+    const filteredPosts = addPost.filter(user =>
         user.username.toLowerCase().includes(search.toLowerCase()) ||
         user.caption.toLowerCase().includes(search.toLowerCase())
     ).sort((a, b) => {
@@ -124,27 +193,30 @@ function SearchBar(){
     // console.log(filteredPosts);
     // console.log(posts);
     return (
-        <>
-            <label>Search Here: </label>
-
-            <input
-                type="text"
-                placeholder="Search users..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            />
+        <div className="search-box">
+            <div className="search-bar">
+                <label>Search Here: </label>
+                <input
+                    type="text"
+                    placeholder="Search users..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+            </div>
             <SortControl sortBy={sortBy} setSortBy={setSortBy}/>
             <PostList students={filteredPosts} />
-        </>
+        </div>
     );
    
 }
 
 function App() {
+    const [addPost, SetAddPost] = useState(posts);
     return (
         <div className="app">
             <h1>PhotoShare Manager</h1>
-            <SearchBar />
+            <AddPostForm addPost={addPost} SetAddPost={SetAddPost}/>
+            <SearchBar addPost={addPost}/>
         </div>
     );
 }
