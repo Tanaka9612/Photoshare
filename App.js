@@ -135,9 +135,7 @@ function AddPostForm({addPost, SetAddPost }) {
             caption: caption,
             status: status
         };
-
         SetAddPost(prevPosts => [...prevPosts,newPost]);
-
         setUsername("");
         setCaption("");
         setStatus("Draft");
